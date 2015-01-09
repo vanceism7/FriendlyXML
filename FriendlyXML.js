@@ -92,13 +92,27 @@ function asXML( json_obj )
     {
         if( json_obj.hasOwnProperty( p ) )
         {
-            if( typeof( json_obj[p] ) == 'object' )
+            if( typeof json_obj[p] == "object" )
             {
-                result += "<" + p + getAttr( json_obj[p] ) + ">";
-                result += asXML( json_obj[p] );
-                result += "<\\" + p + ">";
+                //Is a single node
+                if( typeof json_obj[p].length == 'undefined' )
+                {
+                    result += "<" + p + getAttr( json_obj[p] ) + ">";
+                    result += asXML( json_obj[p] );
+                    result += "</" + p + ">";
+                }
+                //Is an array node
+                else if( typeof json_obj[p].length != 'undefined' )
+                {
+                    for( var i = 0; i < json_obj[p].length; ++i )
+                    {
+                        result += "<" + p + getAttr( json_obj[p][i] ) + ">";
+                        result += asXML( json_obj[p][i] );
+                        result += "</" + p + ">";
+                    }
+                }
             }
-            else if( p == "val" ) result += json_obj[p];
+            else if( p == "val") result += json_obj[p];
         }
     }
 
