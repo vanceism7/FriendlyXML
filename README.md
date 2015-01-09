@@ -1,7 +1,7 @@
 # FriendlyXML
 A basic xml parser/serializer inspired by PHP's SimpleXML
 
-This is a basic sax-js based xml parser which converts an xml formatted string into a sensible json object which can be used to locate xml values, edit xml values, and serialize json objects back into an xml string. I'm more of a c#/c++ coder and am just barely dabbing into javascript and node so it may not be super stable but I think I've gotten the basic idea across.
+This is a basic sax-js based xml parser which converts an xml formatted string into a sensible json object which can be used to locate xml values, edit xml values, and serialize json objects back into an xml string. I'm more of a c#/c++ coder and am just barely dabbing into javascript and node so if you look at the code and you're like, "Dang what a newb!", don't be so hard on me cuz I coded this quick status lol. Consequently, It may not be super stable but I think I've gotten the basic idea across.
 
 # Methods
 
@@ -38,7 +38,12 @@ FXML.ParseString( data, function( result )
         
       result.Library.book.Title.val = "The Jungle Book";
       result.Library.book.Genre = "Disney";
-
+	  
+	  //Or Alternatively
+	  
+	  result['Library']['book']['Title']['val'] = "The Jungle Book";
+	  result['Library']['book']['Genre'] = "Disney";
+	  
       console.log( FXML.asXML( result ) );
 } );
 
@@ -51,5 +56,9 @@ The above would output
 
 ( I realize "Disney" isn't actually a genre. Im tired huh? Been a long day )
 
-I just realized that this doesn't have support for multiple elements with the same name, aka arrays.
-So I'll hopefully get to that soon. Hopefully someone finds it of use though. I know I will!
+Other Note: I also realize that this readme is really messed up. I don't know markup language...
+Ill fix it eventually. 
+
+I haven't gotten it up on NPM yet but Ill definitely try to do that in the future when I know its
+more stable. All you basically need is the FriendlyXML.js file and you should be able to use the module.
+Hopefully someone finds it of use though. I know I will!
