@@ -15,11 +15,24 @@ function ParseString( arg_string, arg_callback )
 
     parser.onopentag = function (node)
     {
-        var p = current;
+        //Doesn't already exist
+        if( typeof current[node.name] == 'undefined' )
+        {
+            parent.push( current );
+            current[node.name] = { };
+            current = current[node.name];
+        }
+        else
+        {
+            var c = current[node.name];
+            current[node.name] = [ ];
+            current[node.name].push( c );
+            current[node.name].push( { } );
+            var l = current[node.name].length;
 
-        current[node.name] = { };
-        parent.push( current );
-        current = current[node.name];
+            parent.push( current[node.name] );
+            current = current[node.name][l-1];
+        }
 
         for( var i = 0; i < attributes.length; ++i )
         {
@@ -30,7 +43,15 @@ function ParseString( arg_string, arg_callback )
 
     parser.ontext = function (t)
     {
-        parent[parent.length-1][parser.tag.name]["val"] = t;
+        if( typeof parent[parent.length-1].length == "undefined" )
+        {
+            parent[parent.length-1][parser.tag.name]["val"] = t;
+        }
+        else if( typeof parent[parent.length-1].length != 'undefined' )
+        {
+            var l = parent[parent.length-1].length;
+            parent[parent.length-1][l-1]["val"] = t;
+        }
     };
 
     parser.onclosetag = function (tagName)
