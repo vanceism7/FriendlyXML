@@ -1,0 +1,8 @@
+{
+  "name": "FriendlyXML",
+  "version": "1.0.0",
+  "description": "A friendly XML Parser",
+  "dependencies": {
+    "sax": "^0.6.1"
+  }
+}
