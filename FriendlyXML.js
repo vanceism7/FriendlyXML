@@ -1,16 +1,17 @@
 var sax = require('sax' );
-var parser = sax.parser( true, {trim: true} );
 
 function ParseString( arg_string, arg_callback )
 {
-    var xml = { };
+	var parser = sax.parser( true, {trim: true} );
+	
+	var xml = { };
     var current = xml;
     var parent = [];
     var attributes = [];
 
     parser.onerror = function (e)
     {
-        console.log( e );
+		delete parser;
     };
 
     parser.onopentag = function (node)
@@ -71,7 +72,15 @@ function ParseString( arg_string, arg_callback )
         arg_callback( xml );
     };
 
-    parser.write( arg_string ).end();
+	try
+	{
+		parser.write( arg_string ).close();
+	}
+	catch( ex )
+	{
+		console.log( "XML Read Error" );
+		arg_callback( null );
+	}
 }
 
 /*
