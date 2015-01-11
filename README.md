@@ -17,6 +17,7 @@ Returns an xml formatted string based on a json object. ( ie. json_object )
 # Parsing Usage
 
 Parsing is done in the expected way
+
 	var FXML = require('./FriendlyXML');
 
 	FXML.ParseString( xml_string, function( result )
