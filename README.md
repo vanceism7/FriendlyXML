@@ -22,7 +22,7 @@ Returns an xml formatted string based on a json object. ( ie. json_object )
 
 Parsing is done in the expected way
 
-	var FXML = require('./FriendlyXML');
+	var FXML = require('friendly-xml');
 
 	FXML.ParseString( xml_string, function( result )
 	{
