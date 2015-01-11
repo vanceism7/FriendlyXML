@@ -10,12 +10,15 @@ ParseString( xml_string, callback );
 Where xml_string is an xml formatted string and callback is a function 
 which takes one argument which will be the resulting json object of the parser.
 	
-asXML( json_object ); //Returns an xml formatted string based on a json object. ( ie. json_object )
+asXML( json_object );
+
+Returns an xml formatted string based on a json object. ( ie. json_object )
 
 # Parsing Usage
+
+Parsing is done in the expected way
 	var FXML = require('./FriendlyXML');
 
-	//Parsing is done in the expected way
 	FXML.ParseString( xml_string, function( result )
 	{
 		//Result will be json object
@@ -25,7 +28,7 @@ asXML( json_object ); //Returns an xml formatted string based on a json object. 
 # JSON Manipulation
 
 Any actual xml values will be put in the "val" field. Any other xml attributes will be under their respective name.
-Assuming the following xml
+Assuming the following xml:
 
 	<Library>
 	  <book Genre="horror">
@@ -51,7 +54,10 @@ The JSON object can be manipulated as follows:
 		  console.log( FXML.asXML( result ) );
 	} );
 
-The above would output
+The above would output:
+
+	IT is a horror book!
+
 	<Library>
 	  <book Genre="Disney">
 		<Title>The Jungle Book</Title>
