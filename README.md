@@ -9,12 +9,13 @@ This is a basic sax-js based xml parser which converts an xml formatted string i
 
 # Methods
 
-ParseString( xml_string, callback );
+	ParseString( xml_string, callback );
 
 Where xml_string is an xml formatted string and callback is a function 
-which takes one argument which will be the resulting json object of the parser.
+which takes one argument which will be the resulting json object of the parser or null if
+the parser failed to read the supplied string
 	
-asXML( json_object );
+	asXML( json_object );
 
 Returns an xml formatted string based on a json object. ( ie. json_object )
 
@@ -27,7 +28,7 @@ Parsing is done in the expected way
 	FXML.ParseString( xml_string, function( result )
 	{
 		//Result will be json object
-		console.log( result );
+		if( result != null ) { console.log( result ); }
 	} );
 
 # JSON Manipulation
