@@ -40,13 +40,13 @@ Assuming the following xml:
 
 	<Library>
 	  <book Genre="horror">
-		<Title>IT</Title>
+			<Title>IT</Title>
 	  </book>
 	</Library>
 
 The JSON object can be manipulated as follows:
 
-	FXML.ParseString( data, function( result )
+	FXML.ParseString( xml_string, function( result )
 	{
 		if( result.Library.book.Genre == "Horror" )
 			console.log( result.Library.book.Title.val + " is a horror book!" );
@@ -74,7 +74,35 @@ The above would output:
 
 ( I realize "Disney" isn't actually a genre. Im tired huh? Been a long day )
 
-Hopefully someone finds this to be of use though!
+---
+## Arrays
+If the xml has a repeating tag, it will be converted to an array
+
+Assuming the following xml:
+
+	<Movies>
+		<Favorites>
+			<Title Genre="Magic">Harry Potter 1</Title>
+			<Title Genre="Magic">Chronicles Of Narnia</Title>
+			<Title Genre="Action">Lethal Weapon</Title>
+		</Favorites>
+	</Movies>
+
+It can be used in this way:
+
+	FXML.ParseString( xml_string, function( result )
+	{
+		//Has same val property and attributes as other singular nodes 
+		//i.e: result.Movies.Favorites.Title[0].val
+		//i.e: result.Movies.Favorites.Title[0].Genre
+
+		result.Movies.Favorites.Title.forEach( movie => {
+			console.log( movie.Genre )
+			console.log( movie.Val )
+		});
+	} );
+
+Hopefully someone finds this to be of use!
 
 # License
 
