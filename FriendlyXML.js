@@ -16,61 +16,63 @@ function ParseString( arg_string, arg_callback )
 
     parser.onopentag = function (node)
     {
-        //Doesn't already exist
+        //First encounter of xml tag
         if( typeof current[node.name] == 'undefined' )
-        {
-            parent.push( current );
-            current[node.name] = { };
-            current = current[node.name];
-        }
-        else
-        {
-            var c = current[node.name];
-            current[node.name] = [ ];
-            current[node.name].push( c );
-            current[node.name].push( { } );
-            var l = current[node.name].length;
+            CreateNewXmlNode( node );
+        else //tag occurs multiple times -- make node an array of tags
+            TransformXmlNodeToArray( node );
 
-            parent.push( current[node.name] );
-            current = current[node.name][l-1];
-        }
-
-        for( var i = 0; i < attributes.length; ++i )
-        {
-            current[attributes[i].name] = attributes[i].value;
-        }
-        attributes = []
+        attributes.forEach( a => current[a.name] = a.value );
+        attributes = [];
     };
 
-    parser.ontext = function (t)
+    function CreateNewXmlNode( node )
     {
-        if( typeof parent[parent.length-1].length == "undefined" )
-        {
-            parent[parent.length-1][parser.tag.name]["val"] = t;
-        }
-        else if( typeof parent[parent.length-1].length != 'undefined' )
-        {
-            var l = parent[parent.length-1].length;
-            parent[parent.length-1][l-1]["val"] = t;
-        }
-    };
-
-    parser.onclosetag = function (tagName)
-    {
-        current = parent[parent.length-1];
-        parent.pop();
+        parent.push( current );
+        current = NewNode( node.name );
     }
 
-    parser.onattribute = function (attr)
+    function NewNode( NodeName )
     {
-        // an attribute.  attr has "name" and "value"
-        attributes.push( attr );
+        current[NodeName] = { };
+        return current[NodeName];
+    }
+
+    function TransformXmlNodeToArray( node )
+    {
+        var c = current[node.name];
+        current[node.name] = [ ];
+        current[node.name].push( c );
+        current[node.name].push( { } );
+        
+        var l = current[node.name].length;
+        parent.push( current[node.name] );
+        current = current[node.name][l-1];
+    }
+
+    parser.ontext = function (value)
+    {
+        var LastNode = parent[parent.length-1];
+
+        if( typeof LastNode.length == "undefined" )
+        {
+            LastNode[parser.tag.name]["val"] = value;
+        }
+        else if( typeof LastNode.length != 'undefined' )
+        {
+            var l = LastNode.length;
+            LastNode[l-1]["val"] = value;
+        }
     };
 
-    parser.onend = function()
-    {
-        arg_callback( xml );
-    };
+    parser.onclosetag = (tagName) =>
+        current = parent.pop();
+
+    parser.onattribute = (attr) =>
+        attributes.push( attr );
+
+    parser.onend = () => 
+        arg_callback( xml )
 
 	try
 	{
