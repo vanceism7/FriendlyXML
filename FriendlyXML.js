@@ -8,34 +8,33 @@ function ParseString( arg_string, arg_callback )
     var current = xml;
     var parent = [];
     var attributes = [];
+    const val = "val"
 
-    parser.onerror = function (e)
-    {
-		delete parser;
-    };
+    function Undefined(x) { return typeof x == 'undefined' }
+    function ArrayLast(x) { return x[x.length-1]; }
 
     parser.onopentag = function (node)
     {
         //First encounter of xml tag
-        if( typeof current[node.name] == 'undefined' )
+        if( Undefined( current[node.name] ) )
             CreateNewXmlNode( node );
-        else //tag occurs multiple times -- make node an array of tags
+        else 
+        {
+            //tag occurs multiple times -- make node into an array of nodes
             TransformXmlNodeToArray( node );
 
-        attributes.forEach( a => current[a.name] = a.value );
-        attributes = [];
+            parent.push( current[node.name] );
+            current = ArrayLast( current[node.name] );
+        }
+        
+        ProcessAttributes();
     };
 
     function CreateNewXmlNode( node )
     {
         parent.push( current );
-        current = NewNode( node.name );
-    }
-
-    function NewNode( NodeName )
-    {
-        current[NodeName] = { };
-        return current[NodeName];
+        current[node.name] = { };
+        current = current[node.name];
     }
 
     function TransformXmlNodeToArray( node )
@@ -44,25 +43,22 @@ function ParseString( arg_string, arg_callback )
         current[node.name] = [ ];
         current[node.name].push( c );
         current[node.name].push( { } );
-        
-        var l = current[node.name].length;
-        parent.push( current[node.name] );
-        current = current[node.name][l-1];
+    }
+
+    function ProcessAttributes()
+    {
+        attributes.forEach( a => current[a.name] = a.value );
+        attributes = [];
     }
 
     parser.ontext = function (value)
     {
         var LastNode = parent[parent.length-1];
 
-        if( typeof LastNode.length == "undefined" )
-        {
-            LastNode[parser.tag.name]["val"] = value;
-        }
-        else if( typeof LastNode.length != 'undefined' )
-        {
-            var l = LastNode.length;
-            LastNode[l-1]["val"] = value;
-        }
+        if( LastNode instanceof Array )
+            ArrayLast( LastNode )[val] = value;
+        else
+            LastNode[parser.tag.name][val] = value;
     };
 
     parser.onclosetag = (tagName) =>
@@ -73,6 +69,9 @@ function ParseString( arg_string, arg_callback )
 
     parser.onend = () => 
         arg_callback( xml )
+
+    parser.onerror = (e) =>
+		delete parser;
 
 	try
 	{
