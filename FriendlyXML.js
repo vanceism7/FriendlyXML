@@ -1,5 +1,7 @@
 var sax = require('sax');
 
+const val = "val"
+
 function ParseString( arg_string, arg_callback )
 {
 	var parser = sax.parser( true, {trim: true} );
@@ -8,7 +10,6 @@ function ParseString( arg_string, arg_callback )
     var current = xml;
     var parent = [];
     var attributes = [];
-    const val = "val"
 
     function Undefined(x) { return typeof x == 'undefined' }
     function ArrayLast(x) { return x[x.length-1]; }
@@ -84,64 +85,64 @@ function ParseString( arg_string, arg_callback )
 	}
 }
 
-/*
-function asXML( json_obj, bool_pretty )
-{
-    var result = genXML( json_obj );
-    if( bool_pretty ) result = pd.xml( result );
-
-    return result;
-}
-*/
-
 function asXML( json_obj )
 {
     var result = "";
 
-    for( var p in json_obj )
+    for( var prop in json_obj )
     {
-        if( json_obj.hasOwnProperty( p ) )
+        if( json_obj.hasOwnProperty( prop ) )
         {
-            if( typeof json_obj[p] == "object" )
+            if( json_obj[prop] instanceof Object )
             {
-                //Is a single node
-                if( typeof json_obj[p].length == 'undefined' )
-                {
-                    result += "<" + p + getAttr( json_obj[p] ) + ">";
-                    result += asXML( json_obj[p] );
-                    result += "</" + p + ">";
-                }
-                //Is an array node
-                else if( typeof json_obj[p].length != 'undefined' )
-                {
-                    for( var i = 0; i < json_obj[p].length; ++i )
-                    {
-                        result += "<" + p + getAttr( json_obj[p][i] ) + ">";
-                        result += asXML( json_obj[p][i] );
-                        result += "</" + p + ">";
-                    }
-                }
+                if( json_obj[prop] instanceof Array )
+                    result += ProcessArrayNode( prop, json_obj )
+                else
+                    result += ProcessSingleNode( prop, json_obj );   
             }
-            else if( p == "val") result += json_obj[p];
+            else if( prop == "val" ) 
+                result += json_obj[prop];
         }
     }
 
     return result;
-}
 
-function getAttr( json_obj )
-{
-    var result = "";
-
-    for( var p in json_obj )
+    function ProcessSingleNode( prop, json_obj )
     {
-        if( json_obj.hasOwnProperty( p ) )
-            if( typeof( json_obj[p] ) != 'object' )
-                if( p != "val" )
-                    result += " " + p + "='" + json_obj[p] + "'";
+        var result = "<" + prop + getAttr( json_obj[prop] ) + ">";
+        result += asXML( json_obj[prop] );
+        result += "</" + prop + ">";
+
+        return result;
     }
 
-    return result;
+    function ProcessArrayNode( prop, json_obj )
+    {
+        var result = ""
+        for( var i = 0; i < json_obj[prop].length; ++i )
+        {
+            result += "<" + prop + getAttr( json_obj[prop][i] ) + ">";
+            result += asXML( json_obj[prop][i] );
+            result += "</" + prop + ">";
+        }
+
+        return result;
+    }
+
+    function getAttr( json_obj )
+    {
+        var result = "";
+
+        for( var prop in json_obj )
+        {
+            if( json_obj.hasOwnProperty( prop ) )
+                if( typeof( json_obj[prop] ) != 'object' )
+                    if( prop != val )
+                        result += " " + prop + "='" + json_obj[prop] + "'";
+        }
+
+        return result;
+    }
 }
 
 exports.ParseString = ParseString;

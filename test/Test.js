@@ -82,3 +82,41 @@ QUnit.test( 'asXmlTest', function ParseTest1( assert )
         assert.equal( FXML.asXML( result ), expected )
     } );
 } )
+
+QUnit.test( 'asXmlTest2', function ParseTest1( assert )
+{
+    var expected = "<Library><book Genre='Disney'><Title>The Jungle Book</Title></book></Library>"
+
+    var obj = {
+        "Library" : {
+            "book" : {
+                "Genre" : "Disney",
+                "Title" : { "val" : "The Jungle Book" }
+            }
+        }
+    }
+
+    assert.equal( FXML.asXML( obj ), expected )
+} )
+
+QUnit.test( 'asXmlTest3', function ParseTest1( assert )
+{
+    var expected = "<Library><book Genre='Disney'><Title>The Jungle Book</Title></book><book Genre='Thriller'><Title>Maze Runner</Title></book></Library>"
+
+    var obj = {
+        "Library" : {
+            "book" : [ 
+                {
+                    "Genre" : "Disney",
+                    "Title" : { "val" : "The Jungle Book" }
+                },
+                {
+                    "Genre": "Thriller",
+                    "Title" : { "val" : "Maze Runner" } 
+                }
+            ]
+        }
+    }
+
+    assert.equal( FXML.asXML( obj ), expected )
+} )
