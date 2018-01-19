@@ -1,7 +1,7 @@
 # Friendly-XML
 A basic xml parser/serializer inspired by PHP's SimpleXML
 
-This is a basic sax-js based xml parser which converts an xml formatted string into a sensible json object which can be used to locate xml values, edit xml values, and serialize json objects back into an xml string. I'm more of a c#/c++ coder and am just barely dabbing into javascript and node so if you look at the code and you're like, "Dang what a newb!", don't be so hard on me cuz I coded this quick status lol. Consequently, It may not be super stable but I think I've gotten the basic idea across.
+This is a basic sax-js based xml parser which converts an xml formatted string into a sensible json object which can be used to locate xml values, edit xml values, and serialize json objects back into an xml string. This is more for basic xml parsing, it may not be super stable for more advanced scenarios as I'm not an expert in the uses xml but it should work for the purposes of basic xml reading/manipulation
 
 # Installation
 
@@ -11,9 +11,11 @@ This is a basic sax-js based xml parser which converts an xml formatted string i
 
 	ParseString( xml_string, callback );
 
-Where xml_string is an xml formatted string and callback is a function 
-which takes one argument which will be the resulting json object of the parser or null if
-the parser failed to read the supplied string
+(xml_string: string) - an xml formatted string
+
+(callback: json_object->void) - a function which takes one argument which will be the resulting json object passed from the parser or null if the parser failed to read the supplied string
+
+---
 	
 	asXML( json_object );
 
@@ -72,7 +74,7 @@ The above would output:
 
 ( I realize "Disney" isn't actually a genre. Im tired huh? Been a long day )
 
-Hopefully someone finds it of use though. I know I will!
+Hopefully someone finds this to be of use though!
 
 # License
 
