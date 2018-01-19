@@ -1,4 +1,4 @@
-var sax = require('sax' );
+var sax = require('sax');
 
 function ParseString( arg_string, arg_callback )
 {
